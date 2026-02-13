@@ -105,8 +105,8 @@ flowchart TB
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/med-ai2.git
-cd med-ai2
+git clone https://github.com/yourusername/Med-Ai.git
+cd Med-Ai
 
 # 2. Create and activate virtual environment
 python3 -m venv venv
@@ -394,11 +394,8 @@ curl -X POST http://127.0.0.1:8000/analyze \
 
 ---
 
-## 🎯 Resume-Ready Description
 
-> **Explainable Multimodal Clinical AI Assistant** — Designed and built a modular, production-quality medical AI system combining DenseNet121 CNN pathology detection with MedGemma 4B multimodal LLM reasoning for chest X-ray analysis. Implemented confidence-calibrated CNN+LLM fusion with automated contradiction detection, Grad-CAM visual explainability, entropy-based uncertainty estimation, and rule-based risk stratification. Optimized for Apple Silicon with MPS acceleration and local MLX inference for privacy-preserving operation. FastAPI backend with premium Streamlit frontend producing structured clinical JSON output. Full test suite with 6 end-to-end pipeline tests.
 
-**Key Technologies:** Python · PyTorch · MLX · DenseNet121 · MedGemma 4B · Grad-CAM · FastAPI · Streamlit · Apple Silicon MPS
 
 ---
 
