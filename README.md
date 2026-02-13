@@ -1,4 +1,4 @@
-<![CDATA[<div align="center">
+
 
 # 🏥 Explainable Multimodal Clinical AI Assistant
 
@@ -415,4 +415,4 @@ This project is for **research and educational purposes only**. It is not intend
 *Always consult a qualified healthcare professional for medical advice.*
 
 </div>
-]]>
+
