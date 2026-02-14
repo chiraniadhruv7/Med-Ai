@@ -10,6 +10,7 @@
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io)
 [![Apple Silicon](https://img.shields.io/badge/Apple_Silicon-Optimized-000000?style=for-the-badge&logo=apple&logoColor=white)](https://developer.apple.com/metal/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+[![Open In Colab](https://img.shields.io/badge/Open_in_Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white)](https://colab.research.google.com/github/chiraniadhruv7/Med-Ai/blob/main/Med_Ai.ipynb)
 
 <br>
 
@@ -155,6 +156,23 @@ Open **http://localhost:8501** in your browser.
 
 ---
 
+## 📓 Try It in Google Colab
+
+Don't have an Apple Silicon Mac or prefer a cloud-based setup? You can run the entire analysis pipeline directly in **Google Colab** — no local installation required.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/chiraniadhruv7/Med-Ai/blob/main/Med_Ai.ipynb)
+
+The **`Med_Ai.ipynb`** notebook provides:
+
+- 🚀 **One-click setup** — installs all dependencies and downloads model weights inside the Colab runtime
+- 🩻 **End-to-end pipeline demo** — upload a chest X-ray, enter symptoms, and get a full analysis
+- 🔥 **Grad-CAM visualization** — see the heatmap overlay directly in the notebook
+- 🧠 **MedGemma reasoning** — run multimodal clinical reasoning on a free GPU runtime
+
+> **💡 Tip:** Select **Runtime → Change runtime type → T4 GPU** in Colab for the best performance.
+
+---
+
 ## 🖥️ Usage
 
 ### Through the Web UI
@@ -245,6 +263,7 @@ med-ai2/
 │   ├── ui_screenshot.png           # UI screenshot
 │   └── demo_screenshot.png         # Demo with results
 │
+├── Med_Ai.ipynb                    # 📓 Colab notebook — run the full pipeline in the cloud
 ├── requirements.txt                # Apple Silicon compatible dependencies
 ├── .env.example                    # Environment variable template
 ├── .env                            # Local environment config (git-ignored)
