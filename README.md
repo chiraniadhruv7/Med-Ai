@@ -162,14 +162,28 @@ Don't have an Apple Silicon Mac or prefer a cloud-based setup? You can run the e
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/chiraniadhruv7/Med-Ai/blob/main/Med_Ai.ipynb)
 
-The **`Med_Ai.ipynb`** notebook provides:
+### Colab Prerequisites
 
-- 🚀 **One-click setup** — installs all dependencies and downloads model weights inside the Colab runtime
-- 🩻 **End-to-end pipeline demo** — upload a chest X-ray, enter symptoms, and get a full analysis
-- 🔥 **Grad-CAM visualization** — see the heatmap overlay directly in the notebook
-- 🧠 **MedGemma reasoning** — run multimodal clinical reasoning on a free GPU runtime
+| Requirement | Details |
+|-------------|---------|
+| **Google Account** | Required to access Google Colab |
+| **GPU Runtime** | Select **Runtime → Change runtime type → T4 GPU** (free tier works) |
+| **Hugging Face Token** | Required to download MedGemma weights — [get one here](https://huggingface.co/settings/tokens) |
+| **MedGemma License** | Accept the model license at [google/medgemma-4b-it](https://huggingface.co/google/medgemma-4b-it) before running |
+| **Kaggle API Key** | Required to download the NIH Chest X-ray dataset — [create one here](https://www.kaggle.com/settings) |
+| **NIH Labels CSV** | Upload `Data_Entry_2017.csv` when prompted (from the [NIH Chest X-ray dataset](https://www.kaggle.com/datasets/nih-chest-xrays/data)) |
 
-> **💡 Tip:** Select **Runtime → Change runtime type → T4 GPU** in Colab for the best performance.
+### What the Notebook Covers
+
+- 🚀 **One-click setup** — installs all dependencies (PyTorch, Transformers, etc.) inside the Colab runtime
+- 📦 **Dataset download** — pulls real chest X-ray images from Kaggle via API
+- 🔬 **CNN fine-tuning** — trains DenseNet121 on 14 CXR pathologies with mixed-precision training
+- 📊 **Full evaluation** — AUC-ROC curves, confusion matrices, and optimal threshold selection
+- 🔥 **Grad-CAM visualization** — see heatmap overlays highlighting model attention regions
+- 🧠 **MedGemma reasoning** — multimodal clinical reasoning powered by MedGemma 4B
+- 🔀 **Fusion & risk assessment** — CNN + LLM fusion with contradiction detection and risk stratification
+
+> **💡 Tip:** The free T4 GPU runtime is sufficient. Training takes ~2 min/epoch and full inference runs in seconds.
 
 ---
 
