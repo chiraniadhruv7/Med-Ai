@@ -185,6 +185,43 @@ Don't have an Apple Silicon Mac or prefer a cloud-based setup? You can run the e
 
 > **💡 Tip:** The free T4 GPU runtime is sufficient. Training takes ~2 min/epoch and full inference runs in seconds.
 
+### 🔄 Colab Notebook vs Local Project — Key Differences
+
+The Colab notebook and the local project share the same pipeline architecture but differ significantly in **how the CNN is prepared** and **where inference runs**. The most important difference is that the **Colab notebook fine-tunes the DenseNet121 CNN** on real NIH Chest X-ray images, while the local project uses the model with **ImageNet-pretrained weights only** (no medical fine-tuning).
+
+#### Summary Table
+
+| Aspect | 📓 Colab Notebook | 💻 Local Project |
+|--------|-------------------|------------------|
+| **CNN Weights** | **Fine-tuned** on ~5,000 real NIH Chest X-ray14 images | ImageNet-pretrained only (no CXR training) |
+| **Training Loop** | Full training: Adam optimizer, BCE loss, mixed-precision (`GradScaler`), early stopping, LR scheduling | None — model is loaded and used directly for inference |
+| **Dataset** | Downloads NIH Chest X-ray sample via Kaggle API + `Data_Entry_2017.csv` labels | No dataset needed — runs on user-uploaded images |
+| **Evaluation** | Per-pathology AUC-ROC, confusion matrices, precision-recall-F1 curves, optimal threshold search | No evaluation — uses fixed sigmoid outputs |
+| **Thresholds** | **Optimal per-class thresholds** found via precision-recall analysis (varies per pathology) | Fixed 0.5 threshold for all pathologies (implicit via sigmoid) |
+| **GPU / Device** | NVIDIA T4 (CUDA) on Google Colab | Apple Silicon (MPS) or CPU — no CUDA required |
+| **MedGemma Inference** | Native `transformers` pipeline on CUDA (`AutoModelForImageTextToText`, bfloat16) | MLX quantized 8-bit model (`mlx-community/medgemma-4b-it-8bit`) on Apple Silicon |
+| **MedGemma Memory** | Swaps CNN ↔ MedGemma on single T4 GPU (loads/unloads between inferences) | CNN + MedGemma both resident (CNN on MPS, MedGemma on MLX) |
+| **Grad-CAM** | Hook-free approach: manually calls `features.retain_grad()` and runs forward/backward on the raw feature tensor | Hook-based approach: uses `register_forward_hook` / `register_full_backward_hook` on a deep-copied model |
+| **Fusion Module** | CNN weight `0.6`, LLM weight `0.4`, contradiction penalty `0.25`, multiplicative fusion with overall confidence score | Agreement boost `+0.10`, disagreement penalty `−0.15`, additive adjustment per pathology, LLM mention threshold `0.4` |
+| **Uncertainty** | Weights: CNN `0.4`, LLM `0.3`, Agreement `0.3`, subtractive contradiction penalty (`0.05` per contradiction), confidence levels: HIGH/MODERATE/LOW | Weights: CNN `0.45`, LLM `0.35`, Agreement `0.20`, no explicit contradiction penalty, continuous interpretation |
+| **Risk Stratification** | Uses both fused scores AND uncertainty level (e.g., high score + high confidence → HIGH risk) | Rule-based on raw pathology probabilities with special high-risk pathology set (`Pneumothorax`, `Mass`, `Nodule`); can downgrade risk on low confidence |
+| **UI / Deployment** | Inline Colab widgets + a Flask web server (runs inside the notebook via `ngrok` or local tunnel) | Production FastAPI backend + Streamlit frontend (two-process architecture) |
+| **Reports** | Generates downloadable JSON/HTML proof reports with embedded images | Returns structured JSON via API; Streamlit renders results live |
+
+#### What Does "Fine-Tuned CNN" Mean in Practice?
+
+In the Colab notebook, the DenseNet121 model goes through a **real training process**:
+
+1. **Data**: ~5,000 real chest X-ray images from the [NIH Chest X-ray14](https://www.kaggle.com/datasets/nih-chest-xrays/data) dataset with multi-label ground truth
+2. **Training**: 10 epochs with Adam optimizer (`lr=1e-4`), BCE loss, mixed-precision training, and early stopping (patience=5)
+3. **Validation**: 80/20 train/val split with per-pathology AUC-ROC tracking
+4. **Threshold tuning**: Optimal classification thresholds found per pathology using precision-recall curve analysis (instead of a fixed 0.5 cutoff)
+5. **Saved weights**: Best model checkpoint saved to disk (`checkpoints/densenet121_cxr.pth`)
+
+The local project **skips all of this** — it loads DenseNet121 with ImageNet weights and replaces the classifier head with a randomly initialized 14-output linear layer. This means the CNN's pathology probabilities in the local project reflect general visual features learned from ImageNet, **not medically trained detections**.
+
+> **⚠️ Important:** Because the local project's CNN is not fine-tuned on medical images, its pathology probabilities should be interpreted with caution. The Colab notebook's fine-tuned model produces clinically more meaningful predictions. The local project compensates by relying more heavily on MedGemma's multimodal reasoning.
+
 ---
 
 ## 🖥️ Usage
